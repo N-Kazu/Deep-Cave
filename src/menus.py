@@ -85,8 +85,16 @@ def character_screen(player, character_screen_width, character_screen_height, sc
     libtcod.console_print_rect_ex(window, 0, 6, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
                                   libtcod.LEFT, 'Maximum HP: {0}'.format(player.fighter.max_hp))
     libtcod.console_print_rect_ex(window, 0, 7, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-                                  libtcod.LEFT, 'Attack: {0}'.format(player.fighter.power))
-    libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
+                                  libtcod.LEFT, 'Base Attack: {0}'.format(player.fighter.base_power))
+    line = 0
+    if player.equipment.main_hand:
+        for item in player.inventory.items:
+            if player.equipment.main_hand == item:
+                break
+        libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
+                                    libtcod.LEFT, 'Main hand: {0}({1}d{2})'.format(item.name,player.equipment.main_hand.equippable.power_bonus, player.equipment.main_hand.equippable.power_daice))
+        line+=1
+    libtcod.console_print_rect_ex(window, 0, 8+line, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
                                   libtcod.LEFT, 'Defense: {0}'.format(player.fighter.defense))
 
     x = screen_width // 2 - character_screen_width // 2

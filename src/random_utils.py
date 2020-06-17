@@ -1,5 +1,12 @@
 from random import randint
 
+#最大攻撃力powerの乱数を手数(power_daice)だけ発生
+def get_powerbornus(power_bornus, power_daice):
+    total_power = 0
+    for i in range(0,power_daice):
+        total_power += randint(1,power_bornus)
+    return total_power
+
 # level以上のdungeon_levelの時にValueを返す
 def from_dungeon_level(table, dungeon_level):
     for (value, level) in reversed(table):

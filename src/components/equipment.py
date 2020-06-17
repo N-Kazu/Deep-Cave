@@ -1,5 +1,7 @@
 from equipment_slots import EquipmentSlots
 
+from random_utils import get_powerbornus
+
 
 class Equipment:
     def __init__(self, main_hand=None, off_hand=None):
@@ -23,10 +25,10 @@ class Equipment:
         bonus = 0
 
         if self.main_hand and self.main_hand.equippable:
-            bonus += self.main_hand.equippable.power_bonus
+            bonus += get_powerbornus(self.main_hand.equippable.power_bonus, self.main_hand.equippable.power_daice)
 
         if self.off_hand and self.off_hand.equippable:
-            bonus += self.off_hand.equippable.power_bonus
+            bonus += get_powerbornus(self.off_hand.equippable.power_bonus, self.off_hand.equippable.power_daice)
 
         return bonus
 

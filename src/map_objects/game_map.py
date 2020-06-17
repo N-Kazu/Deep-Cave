@@ -191,7 +191,7 @@ class GameMap:
                                     item=item_component)
 
                     elif item_choice == 'sword':
-                        equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3)
+                        equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2, power_daice =4)
                         item = Entity(x, y, '/', libtcod.sky, 'Sword', equippable=equippable_component)
                         
                     elif item_choice == 'shield':
