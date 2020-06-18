@@ -25,10 +25,10 @@ class Equipment:
         bonus = 0
 
         if self.main_hand and self.main_hand.equippable:
-            bonus += get_powerbornus(self.main_hand.equippable.power_bonus, self.main_hand.equippable.power_daice)
+            bonus += get_powerbornus(self.main_hand.equippable.power_bonus, self.main_hand.equippable.power_daice) + self.off_hand.equippable.base_power
 
         if self.off_hand and self.off_hand.equippable:
-            bonus += get_powerbornus(self.off_hand.equippable.power_bonus, self.off_hand.equippable.power_daice)
+            bonus += get_powerbornus(self.off_hand.equippable.power_bonus, self.off_hand.equippable.power_daice) + self.off_hand.equippable.base_power
 
         return bonus
 

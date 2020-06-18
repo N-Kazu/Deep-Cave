@@ -1,1 +1,5 @@
 savegame.*
+src/__pycache__/
+src/build/
+src/dist/
+src/engine.spec

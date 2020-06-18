@@ -85,7 +85,7 @@ def cast_confuse(*args, **kwargs):
         results.append({'consumed': False, 'message': Message('You cannot target a tile outside your field of view.', libtcod.yellow)})
         return results
 
-    #選択座標に脳みそのあるEntityが存在するか
+    #選択座標にAIを持つEntityが存在するか
     for entity in entities:
         if entity.x == target_x and entity.y == target_y and entity.ai:
             confused_ai = ConfusedMonster(entity.ai, 10)

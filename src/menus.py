@@ -92,7 +92,7 @@ def character_screen(player, character_screen_width, character_screen_height, sc
             if player.equipment.main_hand == item:
                 break
         libtcod.console_print_rect_ex(window, 0, 8, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
-                                    libtcod.LEFT, 'Main hand: {0}({1}d{2})'.format(item.name,player.equipment.main_hand.equippable.power_bonus, player.equipment.main_hand.equippable.power_daice))
+                                    libtcod.LEFT, 'Main hand: {0}({1}d{2}+{3})'.format(item.name,player.equipment.main_hand.equippable.power_bonus, player.equipment.main_hand.equippable.power_daice, player.equipment.main_hand.equippable.base_power))
         line+=1
     libtcod.console_print_rect_ex(window, 0, 8+line, character_screen_width, character_screen_height, libtcod.BKGND_NONE,
                                   libtcod.LEFT, 'Defense: {0}'.format(player.fighter.defense))
