@@ -90,7 +90,7 @@ def get_game_variables(constants):
                     equipment=equipment_component)
     entities = [player]
 
-    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=1, power_daice = 3, base_power=0)
+    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_daice=1, daice = 3, base_power=0)
     dagger = Entity(0, 0, '-', libtcod.sky, 'Dagger', equippable=equippable_component)
     player.inventory.add_item(dagger)
     player.equipment.toggle_equip(dagger)

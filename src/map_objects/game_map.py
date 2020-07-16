@@ -2,7 +2,7 @@ import libtcodpy as libtcod
 from random import randint
 
 from components.ai import BasicMonster
-from components.equipment import EquipmentSlots
+from components.equipment import Equipment,EquipmentSlots
 from components.equippable import Equippable
 from components.fighter import Fighter
 from components.item import Item
@@ -115,25 +115,27 @@ class GameMap:
 
     def place_entities(self, room, entities):
         # 部屋のオブジェクト数の決定
-        max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6]], self.dungeon_level)
-        max_items_per_room = from_dungeon_level([[1, 1], [2, 4]], self.dungeon_level)
+        max_monsters_per_room = from_dungeon_level([[2, 1], [3, 4], [5, 6],[6,12]], self.dungeon_level)
+        max_items_per_room = from_dungeon_level([[1, 1], [2, 6]], self.dungeon_level)
 
         number_of_monsters = randint(0, max_monsters_per_room)
         number_of_items = randint(0, max_items_per_room)
 
         # [確率,発生する階数]
         monster_chances = {
-            'orc': 80,
-            'troll': from_dungeon_level([[15, 3], [30, 5], [60, 7]], self.dungeon_level)
+            'goblin': from_dungeon_level([[80, 1], [60, 7], [30,10], [0, 14]], self.dungeon_level),
+            'troll': from_dungeon_level([[15, 3], [60, 5], [80, 14]], self.dungeon_level),
+            'ogre': from_dungeon_level([[15, 6], [30,10], [60,14]], self.dungeon_level)
         }
 
         item_chances = {
-            'healing_potion': 35,
-            'sword': from_dungeon_level([[5, 4]], self.dungeon_level),
-            'shield': from_dungeon_level([[15, 8]], self.dungeon_level),
-            'lightning_scroll': from_dungeon_level([[25, 4]], self.dungeon_level),
-            'fireball_scroll': from_dungeon_level([[25, 6]], self.dungeon_level),
-            'confusion_scroll': from_dungeon_level([[10, 2]], self.dungeon_level)
+            'healing_potion': 15,
+            'bronze_sword': from_dungeon_level([[5, 4]], self.dungeon_level),
+            'shield': from_dungeon_level([[5, 6]], self.dungeon_level),
+            'iron_sword': from_dungeon_level([[5, 8]], self.dungeon_level),
+            'lightning_scroll': from_dungeon_level([[25, 4], [40,8]], self.dungeon_level),
+            'fireball_scroll': from_dungeon_level([[25, 6], [40,10]], self.dungeon_level),
+            'confusion_scroll': from_dungeon_level([[10, 2], [20,4]], self.dungeon_level)
         }
 
         # モンスターの数だけ実行
@@ -146,18 +148,28 @@ class GameMap:
             if not any([entity for entity in entities if entity.x == x and entity.y == y]):
                 monster_choice = random_choice_from_dict(monster_chances)
 
-                if monster_choice == 'orc':
-                    fighter_component = Fighter(hp=20, defense=0, power=4, xp=35)
+                if monster_choice == 'goblin':
+                    fighter_component = Fighter(hp=25, defense=0, power=3, xp=35)
                     ai_component = BasicMonster()
 
-                    monster = Entity(x, y, 'o', libtcod.desaturated_green, 'Orc', blocks=True,
+                    monster = Entity(x, y, 'g', libtcod.desaturated_green, 'goblin', blocks=True,
                                      render_order=RenderOrder.ACTOR, fighter=fighter_component, ai=ai_component)
                 elif monster_choice == 'troll':
-                    fighter_component = Fighter(hp=30, defense=2, power=4, xp=100)
+                    fighter_component = Fighter(hp=40, defense=2, power=4, xp=70)
                     ai_component = BasicMonster()
 
                     monster = Entity(x, y, 'T', libtcod.darker_green, 'Troll', blocks=True, fighter=fighter_component,
                                      render_order=RenderOrder.ACTOR, ai=ai_component)
+                elif monster_choice == 'ogre':
+                    fighter_component = Fighter(hp=70, defense=1, power=4, xp=120)
+                    ai_component = BasicMonster()
+                    equipment_component = Equipment()
+                    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_daice=2, daice = 2, base_power=3)
+                    club = Entity(0, 0, 'l', libtcod.sky, 'club', equippable=equippable_component)
+
+                    monster = Entity(x, y, 'O', libtcod.darker_green, 'Ogre', blocks=True, fighter=fighter_component,
+                                     equipment=equipment_component, render_order=RenderOrder.ACTOR, ai=ai_component)
+                    monster.equipment.toggle_equip(club)
 
                 entities.append(monster)
             else:
@@ -190,14 +202,18 @@ class GameMap:
                         item = Entity(x, y, '#', libtcod.light_pink, 'Confusion Scroll', render_order=RenderOrder.ITEM,
                                     item=item_component)
 
-                    elif item_choice == 'sword':
-                        equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2, power_daice =3, base_power=1)
-                        item = Entity(x, y, '/', libtcod.sky, 'Sword', equippable=equippable_component)
+                    elif item_choice == 'bronze_sword':
+                        equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_daice=2, daice =3, base_power=1)
+                        item = Entity(x, y, '/', libtcod.sky, 'Bronze Sword', equippable=equippable_component)
                         
                     elif item_choice == 'shield':
                         equippable_component = Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1)
                         item = Entity(x, y, '[', libtcod.darker_orange, 'Shield', equippable=equippable_component)
 
+                    elif item_choice == 'iron_sword':
+                        equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_daice=4, daice =3, base_power=2)
+                        item = Entity(x, y, '/', libtcod.sky, 'Iron Sword', equippable=equippable_component)
+                        
                     else:
                         item_component = Item(use_function=cast_lightning, damage=40, maximum_range=5)
                         item = Entity(x, y, '#', libtcod.yellow, 'Lightning Scroll', render_order=RenderOrder.ITEM,
@@ -223,8 +239,8 @@ class GameMap:
         self.make_map(constants['max_rooms'], constants['room_min_size'], constants['room_max_size'],
                       constants['map_width'], constants['map_height'], player, entities)
 
-        #HPを半分回復
-        player.fighter.heal(player.fighter.max_hp // 2)
+        #HPを固定値30回復
+        player.fighter.heal(30)
 
         message_log.add_message(Message('You take a moment to rest, and recover your strength.', libtcod.light_violet))
 
