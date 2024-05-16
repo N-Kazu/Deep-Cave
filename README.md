@@ -1,4 +1,7 @@
 # Deep Cave
+
+![Animation1_](https://github.com/N-Kazu/Deep-Cave/assets/66771601/13131697-7bd4-4699-b02f-da098a5bbd5e)
+
 ## 概要
 ゲーム作成ライブラリであるlibtcodを使用したローグライクゲームです。  
 自己満足のペースで更新をしています。 
